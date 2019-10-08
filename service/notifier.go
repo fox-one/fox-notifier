@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/fox-one/fox-notifier/notifier"
-	"github.com/fox-one/gin-contrib/session"
+	"github.com/fox-one/fox-notifier/session"
 	"github.com/smallnest/rpcx/log"
 )
 
@@ -45,14 +45,14 @@ func (srv *notifierSrv) Do(s *session.Session) {
 
 func (srv *notifierSrv) do(s *session.Session) error {
 	const limit = 100
-	msgs, err := notifier.QueryMessages(s, srv.FromID, "", limit)
+	msgs, err := notifier.QueryMessages(s.Session, srv.FromID, "", limit)
 	if err != nil {
 		return err
 	}
 	if len(msgs) == 0 {
 		return nil
 	}
-	if err := srv.notifier.SendMessages(s, msgs...); err != nil {
+	if err := srv.notifier.SendMessages(s.Session, msgs...); err != nil {
 		return err
 	}
 	fromID := msgs[len(msgs)-1].ID

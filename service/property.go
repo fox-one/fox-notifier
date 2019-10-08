@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/fox-one/gin-contrib/session"
+	"github.com/fox-one/fox-notifier/session"
 	"github.com/fox-one/mixin-sdk/utils"
 )
 

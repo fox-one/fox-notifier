@@ -1,0 +1,25 @@
+mysql:
+  username: root
+  password: 
+  db: funds
+  read: localhost:3306
+  write: localhost:3306
+
+redis:
+  addr: localhost:6379
+  db: 1
+
+aws:
+  key: xxx
+  secret: xxx
+  region: xxx
+
+admin: xxx-user-id-xxx
+
+mixin:
+  client_id: xxx
+  session_id: xxx
+  session_key: |
+    -----BEGIN RSA PRIVATE KEY-----
+    xxx
+    -----END RSA PRIVATE KEY-----

@@ -3,7 +3,7 @@ package service
 import (
 	"sync"
 
-	"github.com/fox-one/gin-contrib/session"
+	"github.com/fox-one/fox-notifier/session"
 )
 
 // Service service interface
