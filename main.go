@@ -7,19 +7,17 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/fox-one/fox-notifier/service"
-
-	"github.com/fox-one/gin-contrib/session"
-
-	"github.com/fox-one/fox-etf/fund"
 	"github.com/fox-one/fox-notifier/notifier"
+	"github.com/fox-one/fox-notifier/server"
+	"github.com/fox-one/fox-notifier/service"
+	"github.com/fox-one/gin-contrib/session"
 	log "github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 )
 
 var (
 	// NAME name
-	NAME = "etf"
+	NAME = "notifier"
 	// VERSION version
 	VERSION = "null"
 	// BUILD build
@@ -47,8 +45,6 @@ func main() {
 
 	s = s.WithContext(ctx)
 	defer s.Close()
-
-	fund.SetupConfig(s.Session)
 
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
@@ -106,19 +102,19 @@ func main() {
 		},
 	})
 
-	// app.Commands = append(app.Commands, &cli.Command{
-	// 	Name: "server",
-	// 	Flags: []cli.Flag{
-	// 		&cli.IntFlag{Name: "port, p", Value: 8081},
-	// 	},
-	// 	Action: func(c *cli.Context) error {
-	// 		return server.Run(s, &server.Option{
-	// 			Port:    c.Int("port"),
-	// 			Debug:   c.Bool("debug"),
-	// 			Version: app.Version,
-	// 		})
-	// 	},
-	// })
+	app.Commands = append(app.Commands, cli.Command{
+		Name: "server",
+		Flags: []cli.Flag{
+			&cli.IntFlag{Name: "port, p", Value: 8081},
+		},
+		Action: func(c *cli.Context) error {
+			return server.Run(s, &server.Option{
+				Port:    c.Int("port"),
+				Debug:   c.Bool("debug"),
+				Version: app.Version,
+			})
+		},
+	})
 
 	if err := app.Run(os.Args); err != nil {
 		log.Errorf("app exit with error: %s", err)

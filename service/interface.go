@@ -15,7 +15,7 @@ type Service interface {
 func Run(s *session.Session) error {
 	group := sync.WaitGroup{}
 
-	notifier, err := createNotifierService(s, nil)
+	notifier, err := createNotifierService(s, s.Notifier())
 	if err != nil {
 		return err
 	}

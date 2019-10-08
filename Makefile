@@ -27,4 +27,4 @@ release: fox-prod
 
 clean:
 	${GO} clean
-	rm -f ./etf.*
+	rm -f ./notifier.*
