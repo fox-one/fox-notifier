@@ -10,7 +10,8 @@ import (
 type Message struct {
 	ID             int64     `gorm:"PRIMARY_KEY" json:"id"`
 	Topic          string    `json:"topic"`
-	ConversationID string    `gorm:"SIZE:36;INDEX;" json:"conversation_id"`
+	ConversationID string    `gorm:"SIZE:36;" json:"conversation_id"`
+	MessageID      string    `gorm:"SIZE:36;UNIQUE;" json:"message_id"`
 	Message        string    `gorm:"TYPE:LONGTEXT;" json:"message"`
 	CreatedAt      time.Time `json:"created_at,omitempty"`
 	UpdatedAt      time.Time `json:"updated_at,omitempty"`

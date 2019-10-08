@@ -15,17 +15,6 @@ type Topic struct {
 	UpdatedAt      time.Time `json:"updated_at,omitempty"`
 }
 
-var conversations map[string]bool
-var adminID string
-
-// Setup setup package
-func Setup(s *session.Session, admin string) error {
-	adminID = admin
-	var err error
-	conversations, err = AllConversations(s)
-	return err
-}
-
 // AllConversations all conversations
 func AllConversations(s *session.Session) (map[string]bool, error) {
 	var topics []*Topic
