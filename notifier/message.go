@@ -17,6 +17,11 @@ type Message struct {
 	UpdatedAt      time.Time `json:"updated_at,omitempty"`
 }
 
+// TableName table
+func (Message) TableName() string {
+	return "messages"
+}
+
 // QueryMessages query messages
 func QueryMessages(s *session.Session, from int64, conversationID string, limit int) ([]*Message, error) {
 	query := s.MysqlRead().Limit(limit)

@@ -15,6 +15,11 @@ type Topic struct {
 	UpdatedAt      time.Time `json:"updated_at,omitempty"`
 }
 
+// TableName table
+func (Topic) TableName() string {
+	return "topics"
+}
+
 // AllConversations all conversations
 func AllConversations(s *session.Session) (map[string]bool, error) {
 	var topics []*Topic
