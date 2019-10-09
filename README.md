@@ -32,3 +32,36 @@ POST /message
   }
 }
 ```
+
+**Error Codes:**
+
+```go
+var (
+    // ErrInvalidInput err invalid input
+    ErrInvalidInput = errors.New(1001, "invalid input")
+    // ErrServerFault err server fault
+    ErrServerFault = errors.New(1002, "internal server error", http.StatusInternalServerError)
+)
+```
+
+## SDK
+
+below is a demo
+
+```go
+package main
+
+import (
+    "context"
+    "log"
+
+    notifier "github.com/fox-one/fox-notifier/sdk"
+)
+
+func main() {
+    n := notifier.NewNotifier("http://localhost:8888")
+    err := n.NotifyMessage(context.TODO(), "", "test", "test")
+    log.Println(err)
+}
+
+```

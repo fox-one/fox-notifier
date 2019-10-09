@@ -7,11 +7,11 @@ import (
 	"time"
 
 	"github.com/fox-one/fox-notifier/session"
+	"github.com/fox-one/gin-contrib/errors"
 	"github.com/fox-one/gin-contrib/gin_helper"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/gofrs/uuid"
-	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -21,6 +21,13 @@ type Option struct {
 	Port    int
 	Debug   bool
 }
+
+var (
+	// ErrInvalidInput err invalid input
+	ErrInvalidInput = errors.New(1001, "invalid input")
+	// ErrServerFault err server fault
+	ErrServerFault = errors.New(1002, "internal server error", http.StatusInternalServerError)
+)
 
 // Run run server
 func Run(s *session.Session, opt *Option) error {
@@ -68,7 +75,7 @@ func Run(s *session.Session, opt *Option) error {
 		defer cancel()
 
 		if err := srv.Shutdown(ctx); err != nil {
-			return errors.Wrap(err, "srv shutdone")
+			return err
 		}
 	}
 
@@ -103,7 +110,7 @@ func createMessage(c *gin.Context) {
 		Message   string `json:"message" binding:"required"`
 	}
 	if err := gin_helper.BindJson(c, &input); err != nil {
-		gin_helper.FailError(c, err, "invalid input")
+		gin_helper.FailError(c, ErrInvalidInput, err)
 		return
 	}
 	if input.MessageID == "" {
@@ -113,7 +120,7 @@ func createMessage(c *gin.Context) {
 	session := Session(c)
 	msg, err := session.Notifier().CreateMessage(session.Session, input.MessageID, input.Topic, input.Message)
 	if err != nil {
-		gin_helper.FailError(c, err, "create message")
+		gin_helper.FailError(c, ErrServerFault, err)
 		return
 	}
 
