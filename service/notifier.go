@@ -44,21 +44,24 @@ func (srv *notifierSrv) Do(s *session.Session) {
 }
 
 func (srv *notifierSrv) do(s *session.Session) error {
-	const limit = 100
+	const limit = 30
 	msgs, err := notifier.QueryMessages(s.Session, srv.FromID, "", limit)
 	if err != nil {
 		return err
 	}
-	if len(msgs) == 0 {
-		return nil
+	fromID := srv.FromID
+	for _, msg := range msgs {
+		if err := srv.notifier.SendMessages(s.Session, msg); err != nil {
+			return err
+		}
+		srv.FromID = msg.ID
 	}
-	if err := srv.notifier.SendMessages(s.Session, msgs...); err != nil {
-		return err
+
+	if srv.FromID != fromID {
+		if err := WriteInt64Property(s, notifierOffsetKey, fromID); err != nil {
+			return err
+		}
 	}
-	fromID := msgs[len(msgs)-1].ID
-	if err := WriteInt64Property(s, notifierOffsetKey, fromID); err != nil {
-		return err
-	}
-	srv.FromID = fromID
+
 	return nil
 }
