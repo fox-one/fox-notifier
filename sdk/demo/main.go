@@ -9,6 +9,6 @@ import (
 
 func main() {
 	n := notifier.NewNotifier("http://localhost:8888")
-	err := n.NotifyMessage(context.TODO(), "", "test", "test")
-	log.Println(err)
+	msg, err := n.NotifyMessage(context.TODO(), "", "test", "test")
+	log.Println(msg, err)
 }

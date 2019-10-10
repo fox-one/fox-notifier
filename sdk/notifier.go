@@ -3,15 +3,11 @@ package notifier
 import (
 	"context"
 	"errors"
+	"time"
 
 	"github.com/fox-one/httpclient"
 	jsoniter "github.com/json-iterator/go"
 )
-
-// Notifier notifier
-type Notifier struct {
-	client *httpclient.Client
-}
 
 const (
 	// ErrCodeInvalidInput err invalid input
@@ -30,6 +26,11 @@ var (
 	ErrUnknown = errors.New("unknown error")
 )
 
+// Notifier notifier
+type Notifier struct {
+	client *httpclient.Client
+}
+
 // NewNotifier new notifier
 func NewNotifier(apiBase string) *Notifier {
 	return &Notifier{
@@ -37,8 +38,18 @@ func NewNotifier(apiBase string) *Notifier {
 	}
 }
 
+// Message message
+type Message struct {
+	ConversationID string    `json:"conversation_id"`
+	MessageID      string    `json:"message_id"`
+	Topic          string    `json:"topic"`
+	Message        string    `json:"message"`
+	CreatedAt      time.Time `json:"created_at"`
+	UpdatedAt      time.Time `json:"updated_at"`
+}
+
 // NotifyMessage notify message
-func (n *Notifier) NotifyMessage(ctx context.Context, messageID, topic, message string) error {
+func (n *Notifier) NotifyMessage(ctx context.Context, messageID, topic, message string) (*Message, error) {
 	bts, err := n.client.POST("/message").
 		P("message_id", messageID).
 		P("topic", topic).
@@ -46,27 +57,29 @@ func (n *Notifier) NotifyMessage(ctx context.Context, messageID, topic, message 
 		Do(ctx).Bytes()
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	var resp struct {
 		Code   int    `json:"code"`
 		ErrMsg string `json:"msg"`
+
+		Message *Message `json:"data"`
 	}
 	if err := jsoniter.Unmarshal(bts, &resp); err != nil {
-		return err
+		return nil, err
 	}
 
 	switch resp.Code {
 	case 0:
-		return nil
+		return resp.Message, nil
 
 	case ErrCodeInvalidInput:
-		return ErrInvalidInput
+		return nil, ErrInvalidInput
 	case ErrCodeServerFault:
-		return ErrServerFault
+		return nil, ErrServerFault
 
 	default:
-		return ErrUnknown
+		return nil, ErrUnknown
 	}
 }
