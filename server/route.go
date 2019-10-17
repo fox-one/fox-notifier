@@ -96,7 +96,6 @@ func healthCheck(version string, detail bool) gin.HandlerFunc {
 			s := Session(c)
 			views["mysql_read"] = s.MysqlRead().DB().Ping() == nil
 			views["mysql_write"] = s.MysqlWrite().DB().Ping() == nil
-			views["redis"] = s.Redis().Ping().Err() == nil
 		}
 
 		gin_helper.Data(c, views)

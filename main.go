@@ -72,10 +72,6 @@ func main() {
 	app.Commands = append(app.Commands, cli.Command{
 		Name: "hc",
 		Action: func(c *cli.Context) error {
-			if err := s.Redis().Ping().Err(); err != nil {
-				return err
-			}
-
 			if err := s.MysqlRead().DB().Ping(); err != nil {
 				return err
 			}
