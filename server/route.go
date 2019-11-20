@@ -32,9 +32,9 @@ var (
 // Run run server
 func Run(s *session.Session, opt *Option) error {
 	if opt.Debug {
-		gin.SetMode(gin.DebugMode)
-	} else {
 		gin.SetMode(gin.ReleaseMode)
+	} else {
+		gin.SetMode(gin.DebugMode)
 	}
 
 	r := gin.New()
