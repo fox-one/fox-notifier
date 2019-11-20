@@ -7,10 +7,10 @@ VERSION = 0.0.1
 BUILD 	= $(shell git rev-parse --short HEAD)
 CONFIGDATA 	= $(shell cat config.${ENV}.yaml | base64)
 
-GO = go
+GO = GO111MODULE=on go
 
-%-dev: GO = GOOS=linux GOARCH=amd64 go
-%-prod: GO = GOOS=linux GOARCH=amd64 go
+%-dev: GO = GO111MODULE=on GOOS=linux GOARCH=amd64 go
+%-prod: GO = GO111MODULE=on GOOS=linux GOARCH=amd64 go
 
 fox-%: out = notifier.${ENV}
 fox-%:
