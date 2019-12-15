@@ -5,10 +5,9 @@ go 1.13
 require (
 	github.com/fox-one/gin-contrib v1.0.4
 	github.com/fox-one/httpclient v0.0.0-20190703042020-ebf1e2fba3ef
-	github.com/fox-one/mixin-sdk v0.1.0
+	github.com/fox-one/mixin-sdk v1.0.0
 	github.com/gin-contrib/cors v1.3.0
 	github.com/gin-gonic/gin v1.4.0
-	github.com/go-redis/redis v6.15.6+incompatible // indirect
 	github.com/gofrs/uuid v3.2.0+incompatible
 	github.com/iancoleman/strcase v0.0.0-20191112232945-16388991a334 // indirect
 	github.com/jinzhu/gorm v1.9.11

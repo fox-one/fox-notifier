@@ -5,13 +5,13 @@ import (
 	"fmt"
 
 	"github.com/fox-one/gin-contrib/session"
-	"github.com/fox-one/mixin-sdk/messenger"
+	mixin "github.com/fox-one/mixin-sdk"
 	"github.com/fox-one/mixin-sdk/utils"
 )
 
 // Notifier notifier
 type Notifier struct {
-	*messenger.Messenger
+	*mixin.User
 }
 
 // ConversationIDFromTopic conversation id from topic
@@ -26,8 +26,8 @@ func (n *Notifier) FetchOrCreateConversation(s *session.Session, topic string) (
 		return conversationID, nil
 	}
 
-	participants := []*messenger.Participant{
-		&messenger.Participant{
+	participants := []*mixin.Participant{
+		&mixin.Participant{
 			UserID: adminID,
 			Role:   "ADMIN",
 		},
@@ -68,14 +68,14 @@ func (n *Notifier) SendMessages(s *session.Session, msgs ...*Message) error {
 		return nil
 	}
 
-	var arr = make([]messenger.Message, len(msgs))
+	var arr = make([]mixin.MessageRequest, len(msgs))
 	for idx, msg := range msgs {
-		arr[idx] = messenger.Message{
+		arr[idx] = mixin.MessageRequest{
 			ConversationID: msg.ConversationID,
 			MessageID:      msg.MessageID,
 			Category:       "PLAIN_TEXT",
 			Data:           base64.StdEncoding.EncodeToString([]byte(msg.Message)),
 		}
 	}
-	return n.Messenger.SendMessages(s.Context(), arr...)
+	return n.User.SendMessages(s.Context(), arr...)
 }

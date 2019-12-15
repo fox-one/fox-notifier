@@ -7,7 +7,7 @@ import (
 
 	"github.com/fox-one/fox-notifier/notifier"
 	gSession "github.com/fox-one/gin-contrib/session"
-	"github.com/fox-one/mixin-sdk/messenger"
+	mixin "github.com/fox-one/mixin-sdk"
 	"github.com/spf13/viper"
 )
 
@@ -95,7 +95,7 @@ func (s *Session) Admin() string {
 }
 
 func createNotifier(v *viper.Viper) (*notifier.Notifier, error) {
-	m, err := messenger.NewMessengerWithSession(
+	user, err := mixin.NewUser(
 		v.GetString("mixin.client_id"),
 		v.GetString("mixin.session_id"),
 		v.GetString("mixin.session_key"),
@@ -103,5 +103,5 @@ func createNotifier(v *viper.Viper) (*notifier.Notifier, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &notifier.Notifier{Messenger: m}, nil
+	return &notifier.Notifier{User: user}, nil
 }
